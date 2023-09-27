@@ -35,7 +35,8 @@ class AuthController extends Controller
             'password' => 'required|string|min:6',
         ]);
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            //return response()->json($validator->errors(), 422);
+            return $this->apiResponse($validator->errors() , " fails " , 422);
         }
         if (!$token = auth()->attempt($validator->validated())) {
             return response()->json(['error' => 'Unauthorized'], 401);
@@ -95,7 +96,8 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function userProfile() {
-        return response()->json(auth()->user());
+        //return response()->json(auth()->user());
+        return $this->apiResponse(auth()->user() , "ok" , "200");
     }
 
     /**
