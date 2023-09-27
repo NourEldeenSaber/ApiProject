@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
+    use ApiResponseTrait;
+
     /**
      * Create a new AuthController instance.
      *
@@ -54,16 +56,18 @@ class AuthController extends Controller
             'password' => 'required|string|confirmed|min:6',
         ]);
         if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
+            //return response()->json($validator->errors()->toJson(), 400);
+            return $this->apiResponse($validator->errors()->toJson(),"Bad Request" , 400);
         }
         $user = User::create(array_merge(
             $validator->validated(),
             ['password' => bcrypt($request->password)]
         ));
-        return response()->json([
-            'message' => 'User successfully registered',
-            'user' => $user
-        ], 201);
+        // return response()->json([
+        //     'message' => 'User successfully registered',
+        //     'user' => $user
+        // ], 201);
+        return $this->apiResponse($user , 'User successfully registered' ,'201');
     }
 
     /**
